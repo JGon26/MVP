@@ -10,7 +10,10 @@ const CryptoList = ({ cryptos }) => {
         <div>Name</div>
         <div>Symbol</div>
         <div>Price</div>
+        <div>1h percentage</div>
         <div>24h percentage</div>
+        <div>7d percentage</div>
+        <div>1y percentage</div>
       </div>
       {cryptos.map((crypto, index)=>
       <CryptoListEntry crypto={crypto} key={index} />)}
