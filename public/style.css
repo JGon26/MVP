@@ -1,0 +1,10 @@
+.navBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cryptoEntry {
+  display: flex;
+  justify-content: space-between;
+  color: red;
+}
