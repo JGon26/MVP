@@ -2,63 +2,91 @@ require('dotenv').config;
 const ccxt = require('ccxt');
 const axios = require('axios');
 
+const config = {
+  asset: 'BTC',
+  base: 'USDT',
+  allocation: 0.009,
+  spread: 0.2,
+  tickInterval: 2000
+};
+const market = `${config.asset}/${config.base}`;
 
-const tick = async() => {
-  const config = {
-    asset: 'BTC',
-    base: 'USDT',
-    allocation: 0.009,
-    spread: 0.2,
-    tickInterval: 2000
-  };
+const binanceClient = new ccxt.binanceus({
+  apiKey: '',
+  secret: ''
+});
 
-  const binanceClient = new ccxt.binanceus({
-    apiKey: 'ig30wh7gleDIw2aDl9vYYQrP4f0a7YUzUp2tCtPFweSOzubtgqNAJ4SxoGq7ENQs',
-    secret: 'GREowAWIzwv99POxF7W7Z9UNQYJOgmpTZ9zEU8j4jHCVbpU6MRmw32N4dveDA9lA'
-  });
+binanceClient.fetchBalance()
+  .then((balances) => console.log(balances.free['BTC']));
 
-  const { asset, base, spread, allocation } = config;
-  const market = `${asset}/${base}`;
+// binanceClient.cancelOrder('376336619', market);
+// binanceClient.createLimitBuyOrder(market, 0.001, 20000)
+// .catch(err=>console.log(err))
 
-  const orders = await binanceClient.fetchOpenOrders(market);
-    orders.forEach(async order=> {
-      await binanceClient.cancelOrder(order.id);
-    });
+binanceClient.fetchOpenOrders(market)
+  .then((orders)=>console.log('orders', orders));
 
-    const results = await Promise.all([
-      axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'),
-      axios.get('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd')
-    ]);
 
-    const marketPrice = results[0].data.bitcoin.usd / results[1].data.tether.usd;
+// const tick = async() => {
+//   const config = {
+//     asset: 'BTC',
+//     base: 'USDT',
+//     allocation: 0.009,
+//     spread: 0.2,
+//     tickInterval: 2000
+//   };
 
-    const sellPrice = marketPrice * (1 + spread);
-    const buyPrice = marketPrice * (1 - spread);
-    const balances = await binanceClient.fetchBalance();
-    const assetBalance = balances.free[asset];
-    const baseBalance = balances.free[base];
-    const sellVolume = assetBalance * allocation;
-    const buyVolume = (baseBalance * allocation) / marketPrice;
+//   const binanceClient = new ccxt.binanceus({
+//     apiKey: '',
+//     secret: ''
+//   });
 
-    await binanceClient.createLimitSellOrder(market, sellVolume, sellPrice);
-    await binanceClient.createLimitBuyOrder(market, buyVolume, buyPrice);
+//   const { asset, base, spread, allocation } = config;
+//   const market = `${asset}/${base}`;
+
+//   const orders = await binanceClient.fetchOpenOrders(market);
+//     orders.forEach(async order=> {
+//       await binanceClient.cancelOrder(order.id);
+//     });
+
+//     const results = await Promise.all([
+//       axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'),
+//       axios.get('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd')
+//     ]);
+
+//     const marketPrice = results[0].data.bitcoin.usd / results[1].data.tether.usd;
+
+//     const sellPrice = marketPrice * (1 + spread);
+//     const buyPrice = marketPrice * (1 - spread);
+//     const balances = await binanceClient.fetchBalance();
+//     const assetBalance = balances.free[asset];
+//     const baseBalance = balances.free[base];
+//     const sellVolume = assetBalance * allocation;
+//     const buyVolume = (baseBalance * allocation) / marketPrice;
+
+//     await binanceClient.createLimitSellOrder(market, sellVolume, sellPrice);
+//     await binanceClient.createLimitBuyOrder(market, buyVolume, buyPrice);
+// }
+
+// const run = () => {
+//   const config = {
+//     asset: 'BTC',
+//     base: 'USDT',
+//     allocation: 0.009,
+//     spread: 0.2,
+//     tickInterval: 2000
+//   };
+
+//   const binanceClient = new ccxt.binanceus({
+//     apiKey: '',
+//     secret: ''
+//   });
+//   tick(config, binanceClient);
+
+//   setInterval(tick, config.tickInterval, config, binanceClient);
+// }
+// run();
+
+module.exports = {
+  binance: binanceClient
 }
-
-const run = () => {
-  const config = {
-    asset: 'BTC',
-    base: 'USDT',
-    allocation: 0.009,
-    spread: 0.2,
-    tickInterval: 2000
-  };
-
-  const binanceClient = new ccxt.binanceus({
-    apiKey: 'ig30wh7gleDIw2aDl9vYYQrP4f0a7YUzUp2tCtPFweSOzubtgqNAJ4SxoGq7ENQs',
-    secret: 'GREowAWIzwv99POxF7W7Z9UNQYJOgmpTZ9zEU8j4jHCVbpU6MRmw32N4dveDA9lA'
-  });
-  tick(config, binanceClient);
-
-  setInterval(tick, config.tickInterval, config, binanceClient);
-}
-run();

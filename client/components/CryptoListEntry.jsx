@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const ccxt = require('ccxt');
 
 const CryptoListEntry = ({ crypto }) => {
 
@@ -38,7 +39,11 @@ const CryptoListEntry = ({ crypto }) => {
         <div className='cryptoChart'>
           <coingecko-coin-compare-chart-widget coin-ids={crypto.id} currency="usd" locale="en">
           </coingecko-coin-compare-chart-widget>
-          <coingecko-coin-converter-widget  coin-id={crypto.id} currency="usd" background-color="#000000" font-color="#4c4c4c" locale="en"></coingecko-coin-converter-widget>
+          <coingecko-coin-converter-widget coin-id={crypto.id} currency="usd" background-color="#000000" font-color="#4c4c4c" locale="en"></coingecko-coin-converter-widget>
+          <input type='text'></input>
+          <input type='text'></input>
+          <button>buy Order</button>
+          <button>Sell Order</button>
         </div>
       </div>
 
