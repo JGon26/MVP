@@ -7,3 +7,15 @@
   display: flex;
   justify-content: space-between;
 }
+
+.cryptoChart {
+  display: block;
+  width: 90%;
+  height: 5%;
+}
+
+.cryptoImage {
+  height: 20px;
+  width: 20px;
+  margin-right: 8px;
+}
