@@ -1,6 +1,7 @@
 require('dotenv').config;
 const ccxt = require('ccxt');
 const axios = require('axios');
+const binance = require('./binance.config.js');
 
 const config = {
   asset: 'BTC',
@@ -12,9 +13,24 @@ const config = {
 const market = `${config.asset}/${config.base}`;
 
 const binanceClient = new ccxt.binanceus({
-  apiKey: '',
-  secret: ''
+  apiKey: binance.API_KEY,
+  secret: binance.API_SECRET
 });
+
+const fetchBalances = (symbol) => {
+  const balance = [];
+  return new Promise((resolve, reject) => {
+    binanceClient.fetchBalance()
+      .then((results) => {
+        resolve([results.free[symbol], results.free['USDT']])
+      })
+      .catch((err)=>reject(err));
+  })
+    // .then((result)=> balance.push(result.free[symbol], result.free['USDT']))
+    // .catch((err)=>console.log(err));
+    // console.log('balance',balance)
+    // return balance;
+}
 
 binanceClient.fetchBalance()
   .then((balances) => console.log(balances.free['BTC']));
@@ -88,5 +104,5 @@ binanceClient.fetchOpenOrders(market)
 // run();
 
 module.exports = {
-  binance: binanceClient
+  fetchBalances: fetchBalances
 }

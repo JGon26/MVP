@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 const ccxt = require('ccxt');
+import axios from 'axios';
 
 const CryptoListEntry = ({ crypto }) => {
 
   const [clicked, setClicked] = useState(false);
+  const [cryptBalance, setCryptBalance] = useState();
+  const [dollarBalance, setDollarBalance] = useState();
 
   const setPercentColor = (num) => {
     if (Number(num) > 0) {
@@ -12,6 +15,24 @@ const CryptoListEntry = ({ crypto }) => {
       return { color: 'red' }
     }
   }
+
+  const fetchBalance = (symbol) => {
+    const coin = symbol.toUpperCase();
+    return new Promise ((resolve, reject) => {
+      axios.get('/balance/:symbol', { params: coin, symbol })
+        .then(result=>{ resolve(result.data)})
+        .catch((err) => { reject(err) });
+    });
+  }
+
+  useEffect(() => {
+    fetchBalance(crypto.symbol)
+      .then((results) => {
+        setCryptBalance(results[0]);
+        setDollarBalance(results[1]);
+      })
+      .catch(err=>console.log(err));
+  }, []);
 
   return (
     (!clicked) ?
@@ -40,9 +61,11 @@ const CryptoListEntry = ({ crypto }) => {
           <coingecko-coin-compare-chart-widget coin-ids={crypto.id} currency="usd" locale="en">
           </coingecko-coin-compare-chart-widget>
           <coingecko-coin-converter-widget coin-id={crypto.id} currency="usd" background-color="#000000" font-color="#4c4c4c" locale="en"></coingecko-coin-converter-widget>
+          <div>{crypto.symbol + ' balance: ' + cryptBalance}</div>
+          <div>{`USDT balance: ${dollarBalance.toFixed(2)}`}</div>
           <input type='text'></input>
           <input type='text'></input>
-          <button>buy Order</button>
+          <button onClick={()=>fetchBalance(crypto.symbol)}>buy Order</button>
           <button>Sell Order</button>
         </div>
       </div>
