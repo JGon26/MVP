@@ -18,7 +18,6 @@ const binanceClient = new ccxt.binanceus({
 });
 
 const fetchBalances = (symbol) => {
-  const balance = [];
   return new Promise((resolve, reject) => {
     binanceClient.fetchBalance()
       .then((results) => {
@@ -26,10 +25,14 @@ const fetchBalances = (symbol) => {
       })
       .catch((err)=>reject(err));
   })
-    // .then((result)=> balance.push(result.free[symbol], result.free['USDT']))
-    // .catch((err)=>console.log(err));
-    // console.log('balance',balance)
-    // return balance;
+}
+
+const createLimitBuyOrder = (symbol, amount, price) => {
+  binanceClient.createLimitBuyOrder(`${symbol}/USDT`, amount, price);
+}
+
+const createLimitSellOrder = (symbol, amount, price) => {
+  binanceClient.createLimitSellOrder(`${symbol}/USDT`, amount, price);
 }
 
 binanceClient.fetchBalance()
@@ -104,5 +107,7 @@ binanceClient.fetchOpenOrders(market)
 // run();
 
 module.exports = {
-  fetchBalances: fetchBalances
+  fetchBalances: fetchBalances,
+  createLimitBuyOrder: createLimitBuyOrder,
+  createLimitSellOrder: createLimitSellOrder
 }

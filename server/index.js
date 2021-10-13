@@ -11,6 +11,20 @@ app.get('/balance/:symbol', function(req, res) {
   binance.fetchBalances(req.query['0'])
     .then(results=>res.end(JSON.stringify(results)))
     .catch(err=>console.log(err));
+});
+
+app.post('/buyOrder', function(req, res) {
+
+  const { symbol, amount, price } = req.query;
+
+  binance.createLimitBuyOrder(symbol, Number(amount), Number(price));
+})
+
+app.post('/sellOrder', function(req, res) {
+  console.log(req.query);
+  const { symbol, amount, price } = req.query;
+
+  binance.createLimitSellOrder(symbol, Number(amount), Number(price));
 })
 
 app.listen(3000, function() {

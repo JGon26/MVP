@@ -7,6 +7,10 @@ const CryptoListEntry = ({ crypto }) => {
   const [clicked, setClicked] = useState(false);
   const [cryptBalance, setCryptBalance] = useState();
   const [dollarBalance, setDollarBalance] = useState();
+  const [buyPrice, setBuyPrice] = useState(50);
+  const [buyAmount, setBuyAmount] = useState(1);
+  const [sellPrice, setSellPrice] = useState(100000);
+  const [sellAmount, setSellAmount] = useState(.0004)
 
   const setPercentColor = (num) => {
     if (Number(num) > 0) {
@@ -33,6 +37,24 @@ const CryptoListEntry = ({ crypto }) => {
       })
       .catch(err=>console.log(err));
   }, []);
+
+  const postBuyOrder = (price, symbol, amount) => {
+    const coin = symbol.toUpperCase();
+    axios({
+      method: 'post',
+      url: '/buyOrder',
+      params: { price: price, symbol: coin, amount: amount}
+    })
+  }
+
+  const postSellOrder = (price, symbol, amount) => {
+    const coin = symbol.toUpperCase();
+    axios({
+      method: 'post',
+      url: '/sellOrder',
+      params: { price: price, symbol: coin, amount: amount}
+    })
+  }
 
   return (
     (!clicked) ?
@@ -62,10 +84,10 @@ const CryptoListEntry = ({ crypto }) => {
           </coingecko-coin-compare-chart-widget>
           <coingecko-coin-converter-widget coin-id={crypto.id} currency="usd" background-color="#000000" font-color="#4c4c4c" locale="en"></coingecko-coin-converter-widget>
           <div>{crypto.symbol + ' balance: ' + cryptBalance}</div>
-          <div>{`USDT balance: ${dollarBalance.toFixed(2)}`}</div>
+          <div>{`USDT balance: $${dollarBalance.toFixed(2)}`}</div>
           <input type='text'></input>
           <input type='text'></input>
-          <button onClick={()=>fetchBalance(crypto.symbol)}>buy Order</button>
+          <button onClick={()=>postSellOrder(sellPrice, crypto.symbol, sellAmount)}>buy Order</button>
           <button>Sell Order</button>
         </div>
       </div>
