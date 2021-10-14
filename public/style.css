@@ -8,10 +8,14 @@
   justify-content: space-between;
 }
 
-.cryptoChart {
-  display: block;
-  width: 60%;
-  height: 5%;
+.orderTable {
+  display: flex;
+  justify-content: space-between;
+}
+
+.orderEntry {
+  display: flex;
+  justify-content: space-between;
 }
 
 .cryptoImage {
@@ -19,4 +23,93 @@
   width: 20px;
   margin-right: 8px;
   z-index: 5;
+}
+
+.cryptoModal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0);
+  z-index: 10;
+}
+
+.crypto-modal-content {
+  height: 90%;
+  width: 90%;
+  background-color:rgba(191, 224, 164, 0.979);
+  box-shadow: 10px 25px 50px 10px rgba(71, 71, 70, 0.424), 0 12px 25px 0 rgba(0, 0, 0, 0.19);
+  z-index: 5;
+  border-style: unset;
+}
+
+.crypto-modal-body {
+  display: flex;
+}
+
+.cryptoChart {
+  display: inline-block;
+  width: 700px;
+  height: 80%;
+  margin-left: 2%;
+  margin-top: 2%;
+}
+
+.orderWidget {
+  display: inline-block;
+  height: 700px;
+  width: 500px;
+  margin-top: 2%;
+  margin-left: 4%;
+}
+
+.cryptoBalance,
+.dollarBalance {
+  display: inline;
+  margin-top: 20%;
+  margin-right: 5%;
+}
+
+.dollarbalance {
+  margin-right: 100px;
+}
+
+.buyOrderBox,
+.sellOrderBox {
+  display: inline-block;
+  margin-top: 3%;
+  margin-right: 5%;
+}
+
+.buyInput,
+.sellInput {
+  display: block;
+  width: 200px;
+  margin-bottom: 10px;
+  border-style: solid;
+  border-color:rgb(172, 175, 172);
+}
+
+.buyButton,
+.sellButton {
+  border-style: solid;
+  height: 25px;
+  width: 200px;
+  font-weight: 600;
+  border-width: thin;
+  transition: .5s;
+  margin-top: 2%;
+  color: white;
+}
+
+.buyButton {
+  background-color: rgb(30, 187, 30);
+}
+
+.sellButton {
+  background-color: rgb(240, 99, 99);
 }

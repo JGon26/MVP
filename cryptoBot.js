@@ -35,6 +35,20 @@ const createLimitSellOrder = (symbol, amount, price) => {
   binanceClient.createLimitSellOrder(`${symbol}/USDT`, amount, price);
 }
 
+const fetchOpenOrders = (market) => {
+  return new Promise((resolve, reject) => {
+    binanceClient.fetchOpenOrders(market)
+      .then((results) => {
+        resolve(results)
+      })
+      .catch((err)=> reject(err));
+  })
+}
+
+const closeOrder = (id, market) => {
+  binanceClient.cancelOrder(id, market);
+}
+
 binanceClient.fetchBalance()
   .then((balances) => console.log(balances.free['BTC']));
 
@@ -42,8 +56,8 @@ binanceClient.fetchBalance()
 // binanceClient.createLimitBuyOrder(market, 0.001, 20000)
 // .catch(err=>console.log(err))
 
-binanceClient.fetchOpenOrders(market)
-  .then((orders)=>console.log('orders', orders));
+// binanceClient.fetchOpenOrders(market)
+//   .then((orders)=>console.log('orders', orders));
 
 
 // const tick = async() => {
@@ -109,5 +123,7 @@ binanceClient.fetchOpenOrders(market)
 module.exports = {
   fetchBalances: fetchBalances,
   createLimitBuyOrder: createLimitBuyOrder,
-  createLimitSellOrder: createLimitSellOrder
+  createLimitSellOrder: createLimitSellOrder,
+  fetchOpenOrders: fetchOpenOrders,
+  closeOrder: closeOrder
 }
